@@ -30,10 +30,10 @@
 global im_save
 
 im_dir  = 'raw_volumes';
-im_save = 'matlab_volumes';
+im_save = 'matlab_volumes_real';
 
 
-for num=57:57 %project number
+for num=204:204 %project number
     
     if num==10
         im_size = 650;
@@ -147,6 +147,23 @@ for num=57:57 %project number
         im = (~im) + (im_tmp==1);
         save_files(im, num, 3)
     end
+    
+    if num==204
+       packs_dir = 'raw_volumes/204_00/voxelized';
+       packs = dir([packs_dir '/*mat']);
+       for i=1:numel(packs)
+          im = load([packs_dir '/' packs(i).name]);
+          im = im.simSpace;
+          save_files(im, num, i);
+       end
+    end
+    
+    if num==297
+            im_size = [519 557 861];
+            fb = fopen([im_dir '/' num2str(num) '_0' num2str(1) '.raw' ],'r');
+            im = reshape(fread(fb,prod(im_size)), im_size)/255;
+            save_files(im, num, 1)
+    end
 
     if num==276
             im_size = [300 300 300];
@@ -208,61 +225,10 @@ for num=57:57 %project number
 end
 
 
-function [] = save_files(im, num, i)
-    disp(['Sample ' num2str(num) ' file ' num2str(i)])
-    
-    if numel(unique(im))>2
-        error('The image is not binary')
-    end
-    
-    figure;imagesc(im(:,:,100))
-    pause(.1)
-    
-    crop_size = 256;
-    crop_save(crop_size, im, num, i);
-    crop_size = 480;
-    crop_save(crop_size, im, num, i);  
-end
 
 
-function []=crop_save(crop_size, im, num, i)
-    i_shape = size(im);
-    if sum( i_shape >= crop_size) == 3
-            [new_im, phi] = cut_geom(im, crop_size);
-            if phi>0.01
-                write_im(new_im, num, i)
-            else
-                disp('The porosity is lower than 1%')
-            end
-    else
-        disp(['The geometry is too small to crop ' num2str(crop_size)])
-    end
-end
 
 
-function [] = write_im(new_im, num, i)
-    global im_save
-    i_shape = size(new_im);
-    x_size  = i_shape(1);
-    save([im_save '/' num2str(num) '_0' num2str(i) '_' num2str(x_size)], ...
-                                                                'new_im')
-end
 
 
-function [new_im, phi] = cut_geom(im, vol_len)
-    i_shape   = size(im);
-    
-    if sum(i_shape==vol_len)==3
-        new_im = im;
-    else
-        first_len = vol_len/2;
-        last_len  = vol_len/2-1;
 
-        new_im = im( fix(i_shape(1)/2)-first_len:fix(i_shape(1)/2)+last_len, ...
-                     fix(i_shape(2)/2)-first_len:fix(i_shape(2)/2)+last_len, ...
-                     fix(i_shape(3)/2)-first_len:fix(i_shape(3)/2)+last_len );
-    end
-             
-    new_im = padarray(new_im,[0,0,1],0,'both'); % add empty voxels for BCs
-    [new_im, phi] = eliminate_isolatedRegions(new_im,6); % erase cul-de-sac pores
-end
