@@ -10,8 +10,8 @@ import torch
 from network import MS_Net
 
 net = MS_Net( 
-              num_scales   =  4,  # number of trainable convNets
-              num_features =  1,  # input features (Euclidean distance, etc)
-              num_filters  =  2,  # number of kernels on each layer of the finest model (most expensive)
+              num_scales   = 4,   # num of trainable convNets
+              num_features = 1,   # input features (Euclidean distance, etc)
+              num_filters  = 2,   # num of kernels on each layer of the finest model (most expensive)
               summary      = True # print the model summary
 )
