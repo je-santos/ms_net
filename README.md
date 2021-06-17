@@ -27,6 +27,8 @@ y     = net( x, masks )[-1] # final prediction
 ```
 
 ## Workflow
+The following illustration shows how the information flows through the individual networks.
+
 <p align="center">
 <img src="./images/flowchart.png" width="750px"></img>
 </p>
