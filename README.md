@@ -7,11 +7,18 @@ Implementation of <a href="https://link.springer.com/article/10.1007/s11242-021-
 
 ```python
 import torch
+
 from network import MS_Net
+from pore_utils import rnd_array
+from network_tools import get_masks
 
 net = MS_Net( 
-              num_scales   = 4,   # num of trainable convNets
-              num_features = 1,   # input features (Euclidean distance, etc)
-              num_filters  = 2,   # num of kernels on each layer of the finest model (most expensive)
-              summary      = True # print the model summary
+              num_scales   := 4,   # num of trainable convNets
+              num_features  = 1,   # input features (Euclidean distance, etc)
+              num_filters   = 2,   # num of kernels on each layer of the finest model (most expensive)
+              summary       = True # print the model summary
 )
+
+x     = rnd_array( size=128, scales=num_scales )
+masks = get_masks( x[-1], num_scales )
+y     = net(x, masks)
