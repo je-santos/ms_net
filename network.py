@@ -24,7 +24,7 @@ def get_trainable_models(scales, features, filters, f_mult):
     models   = []         # empty list to store the models
     nc_in    = features   # number of inputs on the first layer
     norm     = True       # use Norm
-    last_act = 'CELU'     # activation function
+    last_act = None       # activation function
     
     # list of number filters in each model (scale)
     num_filters = [ filters*f_mult**scale for scale in range(scales) ][::-1]
@@ -63,7 +63,7 @@ class get_model(nn.Module):
         self.body = nn.Sequential()
         for i in range( num_layers-1 ):
             new_ncf = int( ncf/2**(i+1) )
-            if i==num_layers-1: norm=False  # no norm in the penultimate block
+            if i==num_layers-2: norm=False  # no norm in the penultimate block
           
             convblock = ConvBlock3D( in_channel  = max(2*new_ncf,ncf_min),
                                      out_channel = max(new_ncf,ncf_min),
@@ -83,7 +83,7 @@ class get_model(nn.Module):
         else:
             self.tail = nn.Sequential(
                             nn.Conv3d( max(new_ncf,ncf_min), nc_out, kernel_size=1,
-                                       stride=1, padding=0))
+                                       stride=1, padding=0)) # no pad needed since 1x1x1
             
     def forward(self,x):
         x = self.head(x)
@@ -118,7 +118,9 @@ class MS_Net(nn.Module):
                  num_features =  1, 
                  num_filters  =  2, 
                  f_mult       =  4,  
-                 device       =  'cpu'
+                 device       =  'cpu',
+                 
+                 summary      = False
                  ):
         
         super(MS_Net, self).__init__()
@@ -134,10 +136,13 @@ class MS_Net(nn.Module):
                                                       num_features,
                                                       num_filters,
                                                       f_mult ) )
+        if summary:
+            print(f'\n Here is a summary of your MS-Net ({net_name}): \n {self.models}')
         
         
         
-    def forward(self, masks, x_list):
+        
+    def forward(self, x_list, masks):
         assert x_list[0].shape[1] == self.feats, \
         f'The number of features provided {x_list[0].shape[1]} \
             does not match with the input size {self.feats}'

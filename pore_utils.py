@@ -58,8 +58,7 @@ def add_dims(x, num_dims):
 
 
 
-def rnd_arrays(size, scales, device='cpu'):
-    
+def rnd_array(size, scales, device='cpu'):
     return get_coarsened_list( ((torch.rand(1,
                                             size,
                                             size,
