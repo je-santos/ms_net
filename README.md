@@ -1,5 +1,7 @@
 # MS-Net: Computationally Efficient Multiscale Neural Network 
-
+<p align="center">
+<img src="./images/fig1.png" width="500px"></img>
+</p>
 Implementation of <a href="https://link.springer.com/article/10.1007/s11242-021-01617-y">The MS-Net</a> in Pytorch. This model provides an easy and effcient way to train neural networks with computationally large 3D arrays. The application shown in the paper considered simulations of flow thorugh porous materials, but the method is general and should be applicable to any other application involving 3D arrays.
 
 
@@ -22,3 +24,9 @@ net = MS_Net(
 x     = rnd_array( size=128, scales = num_scales )
 masks = get_masks( x[-1],    scales = num_scales )
 y     = net( x, masks )[-1] # final prediction
+```
+
+## Workflow
+<p align="center">
+<img src="./images/flowchart.png" width="750px"></img>
+</p>
