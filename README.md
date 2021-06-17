@@ -21,4 +21,4 @@ net = MS_Net(
 
 x     = rnd_array( size=128, scales = num_scales )
 masks = get_masks( x[-1],    scales = num_scales )
-y     = net( x, masks )
+y     = net( x, masks )[-1] # final prediction
