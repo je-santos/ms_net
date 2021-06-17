@@ -30,3 +30,19 @@ y     = net( x, masks )[-1] # final prediction
 <p align="center">
 <img src="./images/flowchart.png" width="750px"></img>
 </p>
+
+
+## Citation
+If you use our code for your own research, we would be grateful if you cite our publication
+[TiPM](https://link.springer.com/article/10.1007/s11242-021-01617-y)
+```
+@article{MSNET,
+title = "Computationally Efficient Multiscale Neural Networks Applied to Fluid Flow in Complex 3D Porous Media",
+journal = " Transp Porous Med",
+year = "2021",
+issn = "1573-1634",
+doi = "https://doi.org/10.1007/s11242-021-01617-y",
+url = "https://link.springer.com/article/10.1007/s11242-021-01617-y"
+}
+```
+
