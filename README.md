@@ -7,7 +7,7 @@ Implementation of <a href="https://link.springer.com/article/10.1007/s11242-021-
 
 ```python
 import torch
-from networks import MS_Net
+from network import MS_Net
 
 net = MS_Net( 
               num_scales   =  4,  # number of trainable convNets
