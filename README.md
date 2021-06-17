@@ -19,6 +19,6 @@ net = MS_Net(
               summary       = True # print the model summary
 )
 
-x     = rnd_array( size=128, scales=num_scales )
-masks = get_masks( x[-1], num_scales )
-y     = net(x, masks)
+x     = rnd_array( size=128, scales = num_scales )
+masks = get_masks( x[-1],    scales = num_scales )
+y     = net( x, masks )
