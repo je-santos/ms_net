@@ -33,7 +33,7 @@ im_dir  = 'raw_volumes';
 im_save = 'matlab_volumes_real';
 
 
-for num=204:204 %project number
+for num=135:135 %project number
     
     if num==10
         im_size = 650;
@@ -125,6 +125,39 @@ for num=204:204 %project number
         im(im==1)=1;
         im(im==9)=1;
         save_files(im, num, 2)
+    end
+    
+    if num==135
+        im_size = [1265 1265 1800];
+        for i=0:2
+            if i==1
+                continue
+            end
+            fb = fopen([im_dir '/' num2str(num) '_0' num2str(i) '.raw' ],'r');
+            im = reshape(fread(fb,prod(im_size)), im_size);
+            im(im==255)=1;
+            im(im==2  )=1;
+            save_files(im, num, i)
+        end
+        
+        for i=0:2
+            if i==1
+                continue
+            end
+            fb = fopen([im_dir '/' num2str(num) '_0' num2str(i) '.raw' ],'r');
+            im = reshape(fread(fb,prod(im_size)), im_size);
+            im(im==255)=1;
+            im(im==0  )=1;
+            im(im==2  )=0;
+            save_files(im, num, i+4)
+        end
+        
+        i=3;
+        fb = fopen([im_dir '/' num2str(num) '_0' num2str(i) '.raw' ],'r');
+        im = reshape(fread(fb,prod(im_size)), im_size);
+        im(im==255)=1;
+        save_files(im, num, i)
+        
     end
     
 
