@@ -4,7 +4,7 @@ function [] = writeSlurmJob(geom_name, geom_loc, pressure, sim_size, saveto)
 %input parameters
 %======================================================================
 %clear
-cores_per_node = 32;
+cores_per_node = 36;
 
 p0_P=pressure*1.0e6;        %pressure, [Pa]
 T0_P=400.0;                 %temperature, [k]
@@ -68,17 +68,20 @@ accelz_L=accelz_P/accelz_PL;        %accelation in lattice unit, [lu]
 jobName=[geom_name '_' num2str(pressure)];
 batchName=['JOB_' jobName];
 numNode=4;
-tHour=24; 
+tHour=16; 
 taccAcct='pge-fracture'; 
 mpiExec='lbm_lev';
 
-nameSim=[saveto '/outputs/' jobName ];  %This is the name of the output folder
+nameSim=[ saveto '/' jobName ];  %This is the name of the output folder
 mkdir(nameSim)
 
 typeConv='vel'; %currently two choices either 'vel' or 'rho'readCVolout_Reconstruct
 NumPx='4';
-NumPy='4';
-NumPz='8'; 
+NumPy='6';
+NumPz='6'; 
+
+totalprocs = num2str( str2num(NumPx)*str2num(NumPy)*str2num(NumPz) );
+
 geomFile= geom_loc; %Ensure this matches lattice file
 lx=num2str(sim_size); 
 ly=num2str(sim_size); 
@@ -153,19 +156,26 @@ fprintf(fid, ['#SBATCH -o ' jobName '.o%%j\n']);
 fprintf(fid, ['#SBATCH -e ' jobName '.er\n']);
 fprintf(fid, '#SBATCH -N %i\n', numNode);
 fprintf(fid, '#SBATCH -n %i\n', (numNode*cores_per_node));
-fprintf(fid, '#SBATCH -p normal\n');
+%fprintf(fid, '#SBATCH -p normal\n');
 hh=num2str(floor(tHour),'%0.2i');
 mm=num2str((tHour-floor(tHour))*60, '%0.2i');
 ss='00';
 tim=[hh ':' mm ':' ss];
 fprintf(fid, ['#SBATCH -t ' tim '\n']);
-fprintf(fid, ['#SBATCH -A ' taccAcct '\n']);
+%fprintf(fid, ['#SBATCH -A ' taccAcct '\n']);
+fprintf(fid, '\n');
+
+fprintf(fid, 'module purge \n');
+fprintf(fid, 'module load cmake/3.16.2 \n');
+fprintf(fid, 'module load intel-mpi/2019.9.304 \n');
+fprintf(fid, 'module load intel/15.0.5 \n');
+
 fprintf(fid, '\n');
 %fprintf(fid, 'mpicc -O3 -o MRTD3Q19_LEV_DiffBB_Guo_SC MRTD3Q19_LEV_DiffBB_GuoForcing_ShanChen_v1-0.c');
 %fprintf(fid, '\n');
 %fprintf(fid, ' set -x\n');
 %fprintf(fid, '\n');
-fprintf(fid, ['ibrun ./' mpiExec ' ' nameSim ' ' geomFile ' ' NumPx ' ' NumPy ' ' NumPz ' ' lx ' ' ly ' ' num2str(lz) ' ' perX_ ' ' perY_ ' ' perZ_ ' ' ...
+fprintf(fid, ['mpirun -n ' totalprocs ' ./' mpiExec ' ' nameSim ' ' geomFile ' ' NumPx ' ' NumPy ' ' NumPz ' ' lx ' ' ly ' ' num2str(lz) ' ' perX_ ' ' perY_ ' ' perZ_ ' ' ...
                 accelx ' ' accely ' ' accelz ' ' Px_ ' ' Px_LinP_ ' ' PxIn ' ' PxOut ' ' Py_ ' ' Py_LinP_ ' ' PyIn ' ' PyOut ' ' Pz_ ' ' Pz_LinP_ ' ' num2str(PzIn,'%.10f') ' ' num2str(PzOut,'%.10f') ' ' ...
                 resBx_ ' ' resRhoxIn ' ' resRhoxOut ' ' resBy_ ' ' resRhoyIn ' ' resRhoyOut ' ' resBz_ ' ' resRhozIn ' ' resRhozOut ' ' ...
                 isoNum ' ' globalVisc_ ' ' nu ' ' mfp ' ' stdBB_ ' ' uzWall ' ' rBB ' ' GSC ' ' ...

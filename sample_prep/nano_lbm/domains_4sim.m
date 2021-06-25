@@ -24,9 +24,10 @@ sq=1.1; %dummy
 a=1.00; %these are the alpha/beta values chosen in Landry et al. 2016 arctan function
 beta=1.00;  %
 
+% make sure that all are even and greater than 1
 numPx=4;
-numPy=4;
-numPz=8;
+numPy=6;
+numPz=6;
 
 
 
@@ -329,8 +330,8 @@ for pres_count=1:length(pressures)
     
     
     % get slurmjob file
-    writeSlurmJob(sample_name, [sim_geom_loc '/' fileOutRoot ], ...
-                    pressure, sim_size, '../jobs_real')
+    writeSlurmJob(sample_name,  fileOutRoot , ...
+                    pressure, sim_size, sim_geom_loc)
 end
 end
 
