@@ -1,6 +1,8 @@
 %% real images (from DRP)
 
-folder_loc =  '../matlab_volumes_syn';
+sample_type = 'real';
+
+folder_loc =  ['../matlab_volumes_' sample_type];
 output_loc = [folder_loc  '_tiff'];
 images = dir([folder_loc '/*.mat']);
 
@@ -16,8 +18,8 @@ end
 
 % Get MFP
 tiff_dir = output_loc;
-mfp_loc = '../mfp_syn';
-sim_geom_loc = '../domains_syn';
+mfp_loc = ['../mfp_' sample_type];
+sim_geom_loc = ['../domains_' sample_type];
 
 
 parfor i=1:numel(images)
@@ -27,8 +29,8 @@ end
 
 
 %% Reconstruct LBM solution
-output_dir = '../domains_real';
-save_to = '../results_real';
+output_dir = ['../domains_' sample_type];
+save_to = ['../results_' sample_type];
 
 pres = [1,2,5,10,20];
 for p=pres

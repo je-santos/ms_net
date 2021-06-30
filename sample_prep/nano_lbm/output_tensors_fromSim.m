@@ -8,6 +8,12 @@ function[] = ...
 
 file_names = dir( [folder_loc '/' sim_folder '/' sim_folder '_uz'] );
 
+if isfile([save_to '/' sim_folder '_uz.mat'])
+    fprintf('Simulation file already exists \n')
+   return 
+end
+
+
 if isempty(file_names)
     fprintf('No sim was found \n')
     return
