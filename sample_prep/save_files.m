@@ -5,9 +5,7 @@ function [] = save_files(im, num, i)
         error('The image is not binary')
     end
     
-    %figure;imagesc(im(:,:,100))
-    %pause(.1)
-    
+   
     crop_size = 256;
     crop_save(crop_size, im, num, i);
     crop_size = 480;

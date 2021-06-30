@@ -1,20 +1,23 @@
 %% real images (from DRP)
 
-folder_loc =  '../matlab_volumes_real';
+folder_loc =  '../matlab_volumes_syn';
 output_loc = [folder_loc  '_tiff'];
-images = dir([folder_loc '/*256.mat']);
+images = dir([folder_loc '/*.mat']);
 
-for i=1:numel(images)
+for i=1:numel(images) 
    name =  images(i).name(1:end-4);
    im = getfield(load([images(i).folder '/' images(i).name]), 'new_im');
+   if isa(im, 'single')
+      im = uint8(im); 
+   end
    Vol2Tiff(im, output_loc, name)
 end
 
 
 % Get MFP
 tiff_dir = output_loc;
-mfp_loc = '../mfp_real';
-sim_geom_loc = '../domains_real';
+mfp_loc = '../mfp_syn';
+sim_geom_loc = '../domains_syn';
 
 
 parfor i=1:numel(images)
@@ -27,7 +30,7 @@ end
 output_dir = '../domains_real';
 save_to = '../results_real';
 
-pres = [1,2,5,10];
+pres = [1,2,5,10,20];
 for p=pres
     folders = dir([output_dir '/*' num2str(p)]);
     dirFlags = [folders.isdir];

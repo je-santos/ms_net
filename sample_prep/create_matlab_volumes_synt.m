@@ -137,7 +137,7 @@ save_files(im, num, 0);
 num = 9;
 for i=1:4
     im = load(['synthetic_volumes/Vol_Frac_300' num2str(i) ]);
-    im = im.domain;
+    im = im.Vol_Frac;
     im(:,:,1)=[]; im(:,:,end)=[];
     save_files(im, num, i);
 end
