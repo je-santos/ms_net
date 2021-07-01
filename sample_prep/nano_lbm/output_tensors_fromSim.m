@@ -1,12 +1,22 @@
 function[] = ...
             output_tensors_fromSim(folder_loc, sim_folder,sim_size,save_to)
 
-%folder_loc = 'domains_real';
-%sim_folder = '10_01_256_2';
-%sim_size = 256;
-%save_to = 'results_real';
 
+factor = containers.Map;
+factor('1')  = 1.619499463;				
+factor('2')  = 0.790754568;
+factor('5')  = 0.29330618;
+factor('10') = 0.128986101;
+factor('20') = 0.051011612;
+
+        
+pressure = split(sim_folder,'_');
+pressure = pressure{end};
+
+conv_factor = factor(pressure);
+        
 file_names = dir( [folder_loc '/' sim_folder '/' sim_folder '_uz'] );
+
 
 if isfile([save_to '/' sim_folder '_uz.mat'])
     fprintf('Simulation file already exists \n')
@@ -130,9 +140,9 @@ for rank = 0:(numPx*numPy*numPz)-1
     %imagesc(imageVolRho(:,:,zstart(threadk))),drawnow;
 end
 
-ux  = imageVolUx;
-uy  = imageVolUy;
-uz  = imageVolUz;
+ux  = imageVolUx*conv_factor;
+uy  = imageVolUy*conv_factor;
+uz  = imageVolUz*conv_factor;
 rho = imageVolRho;
 
 save([save_to '/' sim_folder '_ux' ],'ux' );
