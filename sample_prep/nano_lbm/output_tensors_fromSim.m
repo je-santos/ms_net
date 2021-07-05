@@ -140,17 +140,35 @@ for rank = 0:(numPx*numPy*numPz)-1
     %imagesc(imageVolRho(:,:,zstart(threadk))),drawnow;
 end
 
-ux  = imageVolUx*conv_factor;
-uy  = imageVolUy*conv_factor;
-uz  = imageVolUz*conv_factor;
-rho = imageVolRho;
+ux  = chop_bc( imageVolUx*conv_factor );
+uy  = chop_bc( imageVolUy*conv_factor );
+uz  = chop_bc( imageVolUz*conv_factor );
+rho = chop_bc( imageVolRho );
 
 save([save_to '/' sim_folder '_ux' ],'ux' );
 save([save_to '/' sim_folder '_uy' ],'uy' );
 save([save_to '/' sim_folder '_uz' ],'uz' );
 save([save_to '/' sim_folder '_rho'],'rho');
 
+mfp_folder = erase(folder_loc, '../domains');
+mfp = chop_bc( unpackStruct( load([ '../mfp' mfp_folder '/' sim_folder '_MPa']) ) );
 
+save([save_to '/' sim_folder], 'mfp', 'ux', 'uy', 'uz', 'rho');
+
+if strcmp(pressure, '20')
+    
+    conv_factor = ( (1e-6)/(0.5e-9) )^2;
+    ux  = ux*conv_factor;
+    uy  = uy*conv_factor;
+    uz  = uz*conv_factor;
+    
+    lbm_name = erase(sim_folder, ['_' pressure]) ;
+    save([save_to '/' lbm_name], 'ux', 'uy', 'uz', 'rho');
+  
+end
+    
+    
+    
 
 % 
 % %calculate darcy uZ
@@ -188,3 +206,7 @@ save([save_to '/' sim_folder '_rho'],'rho');
 % %save (['Vel_P_',num2str(int8(p0_P/1000000)),'MPa'], 'Ux_P','Uy_P','Uz_P');
 end
 
+function im = chop_bc(im)
+    im(:,:,1)   = [];
+    im(:,:,end) = [];
+end
