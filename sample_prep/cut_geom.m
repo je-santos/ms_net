@@ -12,6 +12,6 @@ function [new_im, phi] = cut_geom(im, vol_len)
                      fix(i_shape(3)/2)-first_len:fix(i_shape(3)/2)+last_len );
     end
              
-    new_im = padarray(new_im,[0,0,1],0,'both'); % add empty voxels for BCs
+    %new_im = padarray(new_im,[0,0,1],0,'both'); % add empty voxels for BCs
     [new_im, phi] = eliminate_isolatedRegions(new_im,6); % erase cul-de-sac pores
 end

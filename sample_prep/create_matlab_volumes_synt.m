@@ -1,13 +1,9 @@
-% add my finneys
-% vugs 
-% fractures
-% more real fractures
-
+% synthetic geometries
 
 global im_save
 
 im_dir  = 'synthetic_volumes';
-im_save = 'matlab_volumes_syn';
+im_save = 'binary_volumes_syn';
 
 %% Finneypack operations
 num=1;
@@ -35,6 +31,12 @@ for i=0:4
    im = load(['synthetic_volumes\solid_fracture_7' num2str(i) '.mat']); 
    im = im.domain;
    save_files(im, num, i+10)
+   im = load(['synthetic_volumes\solid_fracture_8' num2str(i) '.mat']); 
+   im = im.domain;
+   save_files(im, num, i+20)
+   im = load(['synthetic_volumes\solid_fracture_9' num2str(i) '.mat']); 
+   im = im.domain;
+   save_files(im, num, i+30)
 end
 
 %% process-based packs
@@ -77,16 +79,28 @@ save_files(im, num, 0);
 num = 5;
 im = load('synthetic_volumes/solid_fracturedSP_19011');
 im = im.domain;
+im(:,1,:  ) = im(:,2,    :  );
+im(:,end,:) = im(:,end-1,:  );
+im(1,:,:  ) = im(2,:,    :  );
+im(end,:,:) = im(end-1,:,:  );
 save_files(im, num, 1);
 
 num = 5;
 im = load('synthetic_volumes/solid_fracturedSP2_19111');
 im = im.domain;
+im(:,:,1  ) = im(:,:,2);
+im(:,:,end) = im(:,:,end-1);
+im(:,1,:  ) = im(:,2,    :  );
+im(:,end,:) = im(:,end-1,:  );
 save_files(im, num, 2);
 
 num = 5;
 im = load('synthetic_volumes/solid_proppedSP_19012');
 im = im.domain;
+im(1,:,:  ) = im(2,:,    :  );
+im(end,:,:) = im(end-1,:,:  );
+im(:,1,:  ) = im(:,2,    :  );
+im(:,end,:) = im(:,end-1,:  );
 save_files(im, num, 3);
 
 

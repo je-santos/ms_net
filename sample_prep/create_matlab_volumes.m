@@ -30,10 +30,10 @@
 global im_save
 
 im_dir  = 'raw_volumes';
-im_save = 'matlab_volumes_real';
+im_save = 'binary_volumes_real'; 
 
 
-for num=135:135 %project number
+for num=65:66 %project number
     
     if num==10
         im_size = 650;
@@ -81,6 +81,15 @@ for num=135:135 %project number
         save_files(im, num, 1)
     end
     
+    
+    if num==65
+        im_size = [501 501 501];
+        for i=1:5
+            fb = fopen([im_dir '/' num2str(num) '_0' num2str(i) '.raw' ],'r');
+            im = reshape(fread(fb,prod(im_size)), im_size)/255;
+            save_files(im, num, i)
+        end
+    end
     
     if num==69
         im = zeros(255,255,255);
