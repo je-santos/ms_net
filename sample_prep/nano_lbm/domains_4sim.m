@@ -7,7 +7,7 @@ function [] = domains_4sim(sample_name, tiff_dir, mfp_loc, sim_geom_loc)
 
 
 mfps      = [17.56, 8.7228, 3.4318, 1.6871, 0.84688];
-pressures = [1, 2, 5, 10, 20];
+pressures = [1,     2,      5,      10,     20];
 
 
 periodicX_= 0;   %%'1' represents periodic boundary
@@ -27,7 +27,7 @@ beta=1.00;  %
 % make sure that all are even and greater than 1
 numPx=4;
 numPy=6;
-numPz=6;
+numPz=6*2;
 
 
 
@@ -41,10 +41,10 @@ for pres_count=1:length(pressures)
     im_tmp = imread([tiff_dir '/' sample_name '/' sample_name '_0001']);
     sim_size = size(im_tmp,1);
     
-    lx=sim_size;         %changefordiffsize:)
-    ly=sim_size;         %changefordiffsize:)
+    lx=sim_size;         
+    ly=sim_size;         
     sliceStart=1;
-    sliceEnd=sim_size+2;   %changefordiffsize:)
+    sliceEnd=sim_size+2;   
     lz=sliceEnd-sliceStart+1;
     
     

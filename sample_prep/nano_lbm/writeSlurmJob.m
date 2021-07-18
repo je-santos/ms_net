@@ -12,11 +12,11 @@ dx=0.5e-9;                  %lattice resolution, [m/lu]
 
 H_L=sim_size-1;             %characterisitic length in lattice, [lu]   %changefordiffsize:)
 H_P=dx*H_L;                 %characteristic length in physical unit, [m]
-%=============================================
+%=======================================================================
 pressgra_P=0.1E6;           %pressure gradient, [Pa/m]
-%------------------------------------------------------
+%-----------------------------------------------------------------------
 
-%%------------ physical unit and lattice unit ----------------------------
+%%------------ physical unit and lattice unit --------------------------
 Rig=8.314;                  %ideal gas constant, [J/(mol·K)]
 d_CH4=0.375e-9;             %diameter of methane molecule
 M_CH4=16.04e-3;             %molar weigth, [kg/mol]
@@ -24,12 +24,12 @@ NA=6.02e23;                 %Avogadro’s number,[1/mol]
 mass_CH4=M_CH4/NA;          %mass of methane molecule
 w=0.01142;                  %accentic factor
 
-%------------ critical parameters for methane --------------------
+%------------ critical parameters for methane --------------------------
 Tcr_P=190.564;              %critical temperature in physical unit,NIST, [K]
 rhocr_P=162.66;             %critical density in physical unit,NIST,     [kg/m^3]
 pcr_P=4.5992E6;             %critical pressure in physical unit,NIST,    [Pa]
 
-%===============================================================
+%=======================================================================
 
 [Z,fhi,rho0_P] = PengRobinson(T0_P,p0_P,Tcr_P,pcr_P,w,M_CH4,0); %a function to obtain density, based on P-R EOS
 Num=rho0_P/mass_CH4;                %molecular number density of methane,
@@ -41,33 +41,33 @@ Y_Lee=2.447-0.2224*X_Lee;
 mu_P=1.0d-7*K_Lee*exp(X_Lee*((rho0_P/1000.0)^Y_Lee));
 
 %kinetic viscosity
-nu_P=mu_P/rho0_P;                   %Kinematic viscosity, [m^2/s] 
+nu_P=mu_P/rho0_P;                    %Kinematic viscosity, [m^2/s] 
 
-rho0_L=1.0;                         %free gas density in lattice, [lu]  
-rho0_PL=rho0_P/rho0_L;              %density scale
+rho0_L=1.0;                          %free gas density in lattice, [lu]  
+rho0_PL=rho0_P/rho0_L;               %density scale
 
-H_PL=H_P/H_L;                       %length scale, [m/lu]
-MFP_P=1.0/(sqrt(2.0)*Num*pi*d_CH4^2); %mean free path in physical unit, [m]
+H_PL=H_P/H_L;                        %length scale, [m/lu]
+MFP_P=1.0/(sqrt(2.0)*Num*pi*d_CH4^2);%mean free path in physical unit, [m]
 
-MFP_L=MFP_P/H_PL;                   %mean free path in lattice unit, [lu]	
-Kn=MFP_P/H_P;                       %Knudsen number
+MFP_L=MFP_P/H_PL;                    %mean free path in lattice unit, [lu]	
+Kn=MFP_P/H_P;                        %Knudsen number
 
-nu_L=sqrt(2.0/pi/3.0)*MFP_L;        %Kinetic viscosity in lattice unit,[lu] 
-nu_PL=nu_P/nu_L;               %Kinetic viscosity scale, [(m^2/m)/lu]
+nu_L=sqrt(2.0/pi/3.0)*MFP_L;         %Kinetic viscosity in lattice unit,[lu] 
+nu_PL=nu_P/nu_L;                     %Kinetic viscosity scale, [(m^2/m)/lu]
 
-usurf_PL=nu_PL/H_PL;                %velocity scale, [(m/s)/lu]
+usurf_PL=nu_PL/H_PL;                 %velocity scale, [(m/s)/lu]
 usurf_P=0.0;
-usurf_L=usurf_P/usurf_PL;           %velocity in lattice unit, [lu]
+usurf_L=usurf_P/usurf_PL;            %velocity in lattice unit, [lu]
 
-accelz_P=pressgra_P/rho0_P;         %accelation in z direction, [m/s^2]
-accelz_PL=usurf_PL^2/H_PL;          %accelation scale, [(m/s^2)/lu]
-accelz_L=accelz_P/accelz_PL;        %accelation in lattice unit, [lu]
+accelz_P=pressgra_P/rho0_P;          %accelation in z direction, [m/s^2]
+accelz_PL=usurf_PL^2/H_PL;           %accelation scale, [(m/s^2)/lu]
+accelz_L=accelz_P/accelz_PL;         %accelation in lattice unit, [lu]
 
 %%------------------------------------------------------------------------
 
 jobName=[geom_name '_' num2str(pressure)];
 batchName=['JOB_' jobName];
-numNode=4;
+numNode=8;
 tHour=16; 
 taccAcct='pge-fracture'; 
 mpiExec='lbm_lev';
@@ -75,10 +75,10 @@ mpiExec='lbm_lev';
 nameSim=[ saveto '/' jobName ];  %This is the name of the output folder
 mkdir(nameSim)
 
-typeConv='vel'; %currently two choices either 'vel' or 'rho'readCVolout_Reconstruct
+typeConv='vel'; %currently two choices either 'vel' or 'rho' readCVolout_Reconstruct
 NumPx='4';
 NumPy='6';
-NumPz='6'; 
+NumPz='12'; 
 
 totalprocs = num2str( str2num(NumPx)*str2num(NumPy)*str2num(NumPz) );
 
@@ -162,7 +162,6 @@ mm=num2str((tHour-floor(tHour))*60, '%0.2i');
 ss='00';
 tim=[hh ':' mm ':' ss];
 fprintf(fid, ['#SBATCH -t ' tim '\n']);
-%fprintf(fid, ['#SBATCH -A ' taccAcct '\n']);
 fprintf(fid, '\n');
 
 fprintf(fid, 'module purge \n');
@@ -171,7 +170,6 @@ fprintf(fid, 'module load intel-mpi/2019.9.304 \n');
 fprintf(fid, 'module load intel/15.0.5 \n');
 
 fprintf(fid, '\n');
-%fprintf(fid, 'mpicc -O3 -o MRTD3Q19_LEV_DiffBB_Guo_SC MRTD3Q19_LEV_DiffBB_GuoForcing_ShanChen_v1-0.c');
 %fprintf(fid, '\n');
 %fprintf(fid, ' set -x\n');
 %fprintf(fid, '\n');
