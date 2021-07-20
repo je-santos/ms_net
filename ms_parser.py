@@ -1,6 +1,9 @@
 import argparse
 
 
+code_version = 0.001
+
+
 def parse_args():
 
     # function to parse boolean args
@@ -17,26 +20,26 @@ def parse_args():
     # Command-line argument parser
     parser = argparse.ArgumentParser(description="MS-Net properties.")
 
-    parser.add_argument("--net_name", default="test_4", type=str)
-    parser.add_argument("--scales", default=4, type=int)
-    parser.add_argument("--filters", default=2, type=int)
-    parser.add_argument("--LR", default=1e-4, type=float)
+    parser.add_argument("--net_name",    default="test_4", type=str)
+    parser.add_argument("--num_scales",  default=4,        type=int)
+    parser.add_argument("--num_filters", default=2,        type=int)
+    parser.add_argument("--f_mult",      default=4,        type=int)
+    parser.add_argument("--LR",          default=1e-4,     type=float)
+    parser.add_argument("--batch_size",  default=5,        type=int)
+    parser.add_argument("--epochs",      default=99999,    type=int)
     
-    parser.add_argument("--data_aug", type=str2bool, default=0)
-    parser.add_argument("--train", type=str2bool, default=0)
+    parser.add_argument("--log_interval", default=20, type=int)
     
+    parser.add_argument("--data_aug", type=str2bool, default=False)
+    parser.add_argument("--train",    type=str2bool, default=False)
     
-    parser.add_argument(
-        "-gpu",
-        default="0",
-        type=str,
-        help="GPU to train on 0-3 (if a cluster is available)",
-    )
+    parser.add_argument("-gpu", default="0", type=str,
+             help="GPU to train on 0-3 (if a cluster is available)")
+    
     args = parser.parse_args()
-
-   
+    
+    args.code_version = code_version
     print(args)
-
-    return args
+    return args # returns a namespace
 
 

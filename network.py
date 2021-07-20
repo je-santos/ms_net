@@ -120,7 +120,7 @@ class MS_Net(nn.Module):
                  f_mult       =  4,  
                  device       =  'cpu',
                  
-                 summary      = False
+                 summary      = False,
                  ):
         
         super(MS_Net, self).__init__()
