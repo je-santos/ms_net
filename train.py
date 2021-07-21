@@ -1,3 +1,5 @@
+import torch
+
 import wandb
 from ms_parser import parse_args
 
@@ -7,6 +9,7 @@ from training_loops import train_multiscale
 
 params = parse_args()
 params.dataset_loc = '../xx'
+params.torch_version = torch.__version__
 
 
 wandb.init( project='test1', 

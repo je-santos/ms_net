@@ -1,5 +1,5 @@
 import argparse
-
+import torch
 
 code_version = 0.001
 
@@ -38,7 +38,8 @@ def parse_args():
     
     args = parser.parse_args()
     
-    args.code_version = code_version
+    args.torch_version = torch.__version__
+    args.code_version  = code_version
     print(args)
     return args # returns a namespace
 
