@@ -33,6 +33,8 @@ The following illustration shows how the information flows through the individua
 <img src="./images/flowchart.png" width="750px"></img>
 </p>
 
+## Video
+A high-level talk describing the MS-Net highlights is posted on [youtube](https://www.youtube.com/watch?v=DCXSdEDJE0E)
 
 ## Citation
 If you use our code for your own research, we would be grateful if you cite our publication
