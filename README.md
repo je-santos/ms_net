@@ -29,6 +29,10 @@ masks = get_masks( x[-1],    scales = num_scales )
 y     = net( x, masks )[-1] # final prediction
 ```
 
+## Data
+
+Download the desired data from [the digital rocks portal](https://www.digitalrocksportal.org/projects/372) (or create your own via your preferred simulation method).
+
 ## Workflow
 The following illustration shows how the information flows through the individual networks.
 
